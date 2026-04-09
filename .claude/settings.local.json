@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(brew --version)",
+      "Bash(brew tap:*)",
+      "Bash(brew install:*)",
+      "Bash(docker --version)",
+      "Bash(sw_vers)",
+      "Bash(curl -# -L \"https://fastdl.mongodb.org/osx/mongodb-macos-arm64-8.0.20.tgz\" -o /tmp/mongodb.tgz)",
+      "Bash(mkdir -p ~/mongodb)",
+      "Bash(tar -xzf /tmp/mongodb.tgz -C ~/mongodb --strip-components=1)",
+      "Read(//Users/harshvashistha/mongodb/**)",
+      "Bash(mkdir -p ~/mongodb/data/db ~/mongodb/logs)",
+      "Bash(~/mongodb/bin/mongod --dbpath ~/mongodb/data/db --logpath ~/mongodb/logs/mongod.log --fork --bind_ip 127.0.0.1)",
+      "Bash(~/mongodb/bin/mongod --version)",
+      "Bash(chmod +x /Users/harshvashistha/PulseAssignment/start-mongo.sh)",
+      "Bash(node -e \"require\\('dotenv'\\).config\\(\\); const mongoose = require\\('mongoose'\\); mongoose.connect\\(process.env.MONGODB_URI\\).then\\(\\(\\) => { console.log\\('Connected!'\\); process.exit\\(0\\); }\\).catch\\(e => { console.error\\('Failed:', e.message\\); process.exit\\(1\\); }\\)\")"
+    ]
+  }
+}

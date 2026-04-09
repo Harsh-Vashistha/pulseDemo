@@ -1,0 +1,9 @@
+# ignore all node_modules directories
+node_modules/
+
+# environment and logs
+.env
+*.log
+
+# macOS
+.DS_Store
