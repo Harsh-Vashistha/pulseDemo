@@ -23,7 +23,7 @@ describe('Auth API', () => {
     expect(res.statusCode).toBe(201);
     expect(res.body.success).toBe(true);
     expect(res.body.token).toBeDefined();
-    expect(res.body.user.role).toBe('admin'); // first user is admin
+    expect(res.body.user.role).toBe('admin');
   });
 
   it('should not register duplicate email', async () => {

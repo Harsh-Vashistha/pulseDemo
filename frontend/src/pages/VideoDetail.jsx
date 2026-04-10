@@ -91,7 +91,6 @@ export default function VideoDetail() {
     <div className="p-6 max-w-4xl mx-auto">
       <Link to="/library" className="text-gray-400 hover:text-white text-sm mb-6 inline-block">← Back to Library</Link>
 
-      {/* Video player or processing card */}
       <div className="mb-6">
         {video.status === 'completed' ? (
           <VideoPlayer video={video} />
@@ -105,7 +104,6 @@ export default function VideoDetail() {
         )}
       </div>
 
-      {/* Video info */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
         {editing ? (
           <div className="space-y-4">

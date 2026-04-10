@@ -1,9 +1,5 @@
-// Role hierarchy: admin > editor > viewer
 const roleHierarchy = { viewer: 1, editor: 2, admin: 3 };
 
-/**
- * Requires the user to have at least the specified role.
- */
 const requireRole = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
@@ -24,17 +20,11 @@ const requireRole = (...roles) => {
   };
 };
 
-/**
- * Ensures a user can only access their own resources unless they're an admin.
- */
 const ownResourceOrAdmin = (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({ success: false, message: 'Authentication required.' });
   }
-
   if (req.user.role === 'admin') return next();
-
-  // For non-admin: video ownership is checked in the route handler
   next();
 };
 

@@ -3,6 +3,7 @@ import { videoAPI } from '../api';
 
 export default function VideoPlayer({ video }) {
   const videoRef = useRef(null);
+
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -12,7 +13,7 @@ export default function VideoPlayer({ video }) {
   const [error, setError] = useState('');
 
   const token = localStorage.getItem('token');
-  const streamUrl = `${videoAPI.getStreamUrl(video._id)}`;
+  const streamUrl = `${videoAPI.getStreamUrl(video._id)}?token=${token}`;
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -69,7 +70,9 @@ export default function VideoPlayer({ video }) {
       <div className="rounded-xl bg-red-900/20 border border-red-500/30 p-8 text-center">
         <p className="text-4xl mb-3">⚠️</p>
         <h3 className="text-red-400 font-semibold text-lg">Content Flagged</h3>
-        <p className="text-gray-400 text-sm mt-2">This video has been flagged for potentially sensitive content and cannot be played.</p>
+        <p className="text-gray-400 text-sm mt-2">
+          This video has been flagged for potentially sensitive content and cannot be played.
+        </p>
       </div>
     );
   }
@@ -78,7 +81,7 @@ export default function VideoPlayer({ video }) {
     <div className="relative bg-black rounded-xl overflow-hidden group">
       <video
         ref={videoRef}
-        src={`/api/videos/${video._id}/stream`}
+        src={streamUrl}
         className="w-full max-h-[500px] object-contain"
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
@@ -88,9 +91,8 @@ export default function VideoPlayer({ video }) {
         preload="metadata"
       />
 
-      {/* Controls overlay */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-        {/* Progress bar */}
+
         <input
           type="range"
           min={0}
@@ -101,7 +103,10 @@ export default function VideoPlayer({ video }) {
         />
 
         <div className="flex items-center gap-3">
-          <button onClick={togglePlay} className="text-white text-xl w-8 h-8 flex items-center justify-center hover:text-blue-400 transition-colors">
+          <button
+            onClick={togglePlay}
+            className="text-white text-xl w-8 h-8 flex items-center justify-center hover:text-blue-400 transition-colors"
+          >
             {playing ? '⏸' : '▶'}
           </button>
 
@@ -124,7 +129,10 @@ export default function VideoPlayer({ video }) {
             {formatTime(currentTime)} / {formatTime(duration)}
           </span>
 
-          <button onClick={toggleFullscreen} className="ml-auto text-white text-sm hover:text-blue-400">
+          <button
+            onClick={toggleFullscreen}
+            className="ml-auto text-white text-sm hover:text-blue-400"
+          >
             {fullscreen ? '⊡' : '⛶'}
           </button>
         </div>

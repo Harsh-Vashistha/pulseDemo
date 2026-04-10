@@ -73,7 +73,6 @@ export default function VideoUpload({ onUploadComplete }) {
       <h2 className="text-lg font-semibold text-white mb-4">Upload Video</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Drop zone */}
         <div
           onDrop={onDrop}
           onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
@@ -104,7 +103,6 @@ export default function VideoUpload({ onUploadComplete }) {
           )}
         </div>
 
-        {/* Title */}
         <div>
           <label className="block text-sm text-gray-400 mb-1">Title *</label>
           <input
@@ -117,7 +115,6 @@ export default function VideoUpload({ onUploadComplete }) {
           />
         </div>
 
-        {/* Description */}
         <div>
           <label className="block text-sm text-gray-400 mb-1">Description</label>
           <textarea
@@ -130,7 +127,6 @@ export default function VideoUpload({ onUploadComplete }) {
           />
         </div>
 
-        {/* Tags */}
         <div>
           <label className="block text-sm text-gray-400 mb-1">Tags (comma-separated)</label>
           <input
@@ -144,7 +140,6 @@ export default function VideoUpload({ onUploadComplete }) {
 
         {error && <p className="text-red-400 text-sm">{error}</p>}
 
-        {/* Upload progress */}
         {uploading && (
           <div>
             <div className="flex justify-between text-sm text-gray-400 mb-1">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { adminAPI } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 const roleColors = {
   admin: 'bg-purple-500/20 text-purple-400',
@@ -8,6 +9,7 @@ const roleColors = {
 };
 
 export default function AdminPanel() {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -66,7 +68,6 @@ export default function AdminPanel() {
       <h1 className="text-2xl font-bold text-white mb-2">Admin Panel</h1>
       <p className="text-gray-400 text-sm mb-8">Manage users and view system statistics</p>
 
-      {/* Stats */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           {[
@@ -84,7 +85,6 @@ export default function AdminPanel() {
         </div>
       )}
 
-      {/* Users table */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
         <div className="p-4 border-b border-gray-800 flex items-center justify-between gap-4">
           <h2 className="text-white font-semibold">Users ({filtered.length})</h2>
@@ -109,10 +109,15 @@ export default function AdminPanel() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((u) => (
-                <tr key={u._id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+              {filtered.map((u) => {
+                const isSelf = u._id === currentUser?.id;
+                return (
+                <tr key={u._id} className={`border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${isSelf ? 'bg-blue-500/5' : ''}`}>
                   <td className="px-4 py-3">
-                    <p className="text-white font-medium">{u.username}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-white font-medium">{u.username}</p>
+                      {isSelf && <span className="text-xs bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">You</span>}
+                    </div>
                     <p className="text-gray-500 text-xs">{u.email}</p>
                   </td>
                   <td className="px-4 py-3">
@@ -127,32 +132,37 @@ export default function AdminPanel() {
                     {new Date(u.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <select
-                        value={u.role}
-                        disabled={updating === u._id}
-                        onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                        className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
-                      >
-                        <option value="viewer">Viewer</option>
-                        <option value="editor">Editor</option>
-                        <option value="admin">Admin</option>
-                      </select>
-                      <button
-                        onClick={() => handleToggleStatus(u)}
-                        disabled={updating === u._id}
-                        className={`text-xs px-2 py-1 rounded transition-colors disabled:opacity-50 ${
-                          u.isActive
-                            ? 'bg-red-600/20 hover:bg-red-600/40 text-red-400'
-                            : 'bg-green-600/20 hover:bg-green-600/40 text-green-400'
-                        }`}
-                      >
-                        {u.isActive ? 'Deactivate' : 'Activate'}
-                      </button>
-                    </div>
+                    {isSelf ? (
+                      <span className="text-xs text-gray-600 italic">Cannot modify own account</span>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={u.role}
+                          disabled={updating === u._id}
+                          onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                          className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
+                        >
+                          <option value="viewer">Viewer</option>
+                          <option value="editor">Editor</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                        <button
+                          onClick={() => handleToggleStatus(u)}
+                          disabled={updating === u._id}
+                          className={`text-xs px-2 py-1 rounded transition-colors disabled:opacity-50 ${
+                            u.isActive
+                              ? 'bg-red-600/20 hover:bg-red-600/40 text-red-400'
+                              : 'bg-green-600/20 hover:bg-green-600/40 text-green-400'
+                          }`}
+                        >
+                          {u.isActive ? 'Deactivate' : 'Activate'}
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>

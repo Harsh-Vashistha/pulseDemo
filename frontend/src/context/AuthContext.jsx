@@ -10,17 +10,21 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     const token = localStorage.getItem('token');
+
     if (savedUser && token) {
       setUser(JSON.parse(savedUser));
-      // Verify token is still valid
-      authAPI.me().then(res => {
-        setUser(res.data.user);
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-      }).catch(() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
-      }).finally(() => setLoading(false));
+
+      authAPI.me()
+        .then(res => {
+          setUser(res.data.user);
+          localStorage.setItem('user', JSON.stringify(res.data.user));
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+        })
+        .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }

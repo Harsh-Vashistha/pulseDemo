@@ -24,12 +24,10 @@ export default function VideoCard({ video, onDelete }) {
 
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition-all group">
-      {/* Thumbnail area */}
       <div className="relative h-40 bg-gray-800 flex items-center justify-center">
         <span className="text-5xl opacity-30">🎬</span>
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
 
-        {/* Status badge */}
         <span className={`absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full border ${statusColors[video.status] || statusColors.pending}`}>
           {video.status}
         </span>
@@ -46,7 +44,6 @@ export default function VideoCard({ video, onDelete }) {
         )}
       </div>
 
-      {/* Info */}
       <div className="p-4">
         <h3 className="text-white font-medium truncate mb-1" title={video.title}>{video.title}</h3>
         <p className="text-gray-500 text-xs mb-3">{formatDate(video.createdAt)} · {formatSize(video.size)}</p>

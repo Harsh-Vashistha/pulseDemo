@@ -12,7 +12,6 @@ const generateToken = (id) => {
   });
 };
 
-// POST /api/auth/register
 router.post(
   '/register',
   [
@@ -37,7 +36,6 @@ router.post(
         });
       }
 
-      // First registered user becomes admin
       const userCount = await User.countDocuments();
       const assignedRole = userCount === 0 ? 'admin' : (role || 'editor');
 
@@ -63,7 +61,6 @@ router.post(
   }
 );
 
-// POST /api/auth/login
 router.post(
   '/login',
   [
@@ -109,7 +106,6 @@ router.post(
   }
 );
 
-// GET /api/auth/me
 router.get('/me', protect, async (req, res) => {
   res.json({ success: true, user: req.user });
 });

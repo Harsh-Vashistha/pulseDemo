@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.use(protect, requireRole('admin'));
 
-// GET /api/admin/users - list all users
 router.get('/users', async (req, res) => {
   try {
     const { page = 1, limit = 20, role, search } = req.query;
@@ -40,7 +39,6 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// PATCH /api/admin/users/:id/role - update user role
 router.patch(
   '/users/:id/role',
   [body('role').isIn(['viewer', 'editor', 'admin']).withMessage('Invalid role')],
@@ -51,6 +49,10 @@ router.patch(
     }
 
     try {
+      if (req.params.id === req.user._id.toString()) {
+        return res.status(400).json({ success: false, message: 'You cannot change your own role.' });
+      }
+
       const user = await User.findByIdAndUpdate(req.params.id, { role: req.body.role }, { new: true });
 
       if (!user) {
@@ -64,7 +66,6 @@ router.patch(
   }
 );
 
-// PATCH /api/admin/users/:id/status - activate/deactivate user
 router.patch('/users/:id/status', async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -83,7 +84,6 @@ router.patch('/users/:id/status', async (req, res) => {
   }
 });
 
-// GET /api/admin/stats - system statistics
 router.get('/stats', async (req, res) => {
   try {
     const [

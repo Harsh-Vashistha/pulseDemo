@@ -11,7 +11,6 @@ let testVideoId;
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/pulse_video_test_videos');
 
-  // Create and login a test user
   const regRes = await request(app).post('/api/auth/register').send({
     username: 'videoeditor',
     email: 'editor@example.com',

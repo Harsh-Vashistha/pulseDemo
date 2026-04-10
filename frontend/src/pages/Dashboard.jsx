@@ -40,14 +40,11 @@ export default function Dashboard() {
     fetchData();
   }, [fetchData]);
 
-  // Listen for real-time updates to refresh processing list
   useEffect(() => {
     const cleanup = onVideoUpdate((data) => {
       if (data.stage === 'done' || data.stage === 'error') {
-        // Refresh lists when a video finishes processing
         fetchData();
       } else {
-        // Update progress in existing processing cards
         setProcessingVideos((prev) =>
           prev.map((v) =>
             v._id === data.videoId
@@ -83,7 +80,6 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Dashboard</h1>
@@ -99,14 +95,12 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Upload panel */}
       {showUpload && (
         <div className="mb-8">
           <VideoUpload onUploadComplete={handleUploadComplete} />
         </div>
       )}
 
-      {/* Admin stats */}
       {isAdmin && stats && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           {[
@@ -124,7 +118,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Currently processing */}
       {processingVideos.length > 0 && (
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-white mb-4">Currently Processing</h2>
@@ -140,7 +133,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Recent videos */}
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white">Recent Videos</h2>

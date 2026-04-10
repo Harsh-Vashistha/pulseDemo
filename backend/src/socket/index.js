@@ -13,30 +13,24 @@ function initSocket(server) {
     },
   });
 
-  // Optional auth middleware for socket connections
   io.use(async (socket, next) => {
     try {
       const token = socket.handshake.auth?.token;
       if (token) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.id).select('-password');
-        if (user) {
-          socket.user = user;
-        }
+        if (user) socket.user = user;
       }
     } catch {
-      // Allow unauthenticated connections; they can still receive public events
     }
     next();
   });
 
   io.on('connection', (socket) => {
-    console.log(`Socket connected: ${socket.id}`);
-
-    // Client joins a room to receive updates for a specific video
+    console.log(`[socket] connected: ${socket.id}`);
     socket.on('video:join', (videoId) => {
       socket.join(`video:${videoId}`);
-      console.log(`Socket ${socket.id} joined room video:${videoId}`);
+      console.log(`[socket] ${socket.id} joined room video:${videoId}`);
     });
 
     socket.on('video:leave', (videoId) => {
@@ -44,7 +38,7 @@ function initSocket(server) {
     });
 
     socket.on('disconnect', () => {
-      console.log(`Socket disconnected: ${socket.id}`);
+      console.log(`[socket] disconnected: ${socket.id}`);
     });
   });
 
@@ -52,7 +46,7 @@ function initSocket(server) {
 }
 
 function getIO() {
-  if (!io) throw new Error('Socket.io not initialized');
+  if (!io) throw new Error('Socket.io not initialized. Call initSocket(server) first.');
   return io;
 }
 

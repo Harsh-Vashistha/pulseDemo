@@ -27,7 +27,6 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen bg-gray-950">
-      {/* Sidebar */}
       <aside className="hidden md:flex flex-col w-64 bg-gray-900 border-r border-gray-800 p-4">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-blue-500">PulseVideo</h1>
@@ -63,7 +62,6 @@ export default function Layout() {
         </div>
       </aside>
 
-      {/* Mobile header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between">
         <h1 className="text-xl font-bold text-blue-500">PulseVideo</h1>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="text-gray-400 text-2xl">
@@ -71,7 +69,6 @@ export default function Layout() {
         </button>
       </div>
 
-      {/* Mobile nav */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-40 bg-gray-900 pt-16 p-4">
           <nav className="space-y-1">
@@ -96,7 +93,6 @@ export default function Layout() {
         </div>
       )}
 
-      {/* Main content */}
       <main className="flex-1 overflow-auto md:pt-0 pt-14">
         <Outlet />
       </main>

@@ -11,10 +11,8 @@ const { getIO } = require('../socket');
 
 const router = express.Router();
 
-// All routes require authentication
 router.use(protect);
 
-// GET /api/videos - list videos with filtering
 router.get(
   '/',
   [
@@ -29,7 +27,6 @@ router.get(
 
       const filter = { isDeleted: false };
 
-      // Multi-tenant: non-admins only see their own videos
       if (req.user.role !== 'admin') {
         filter.uploadedBy = req.user._id;
       }
@@ -73,7 +70,6 @@ router.get(
   }
 );
 
-// POST /api/videos/upload - upload a video (editors and admins)
 router.post(
   '/upload',
   requireRole('editor', 'admin'),
@@ -93,7 +89,6 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      // Clean up uploaded file on validation error
       if (req.file) fs.unlinkSync(req.file.path);
       return res.status(400).json({ success: false, errors: errors.array() });
     }
@@ -118,7 +113,6 @@ router.post(
         organizationId: req.user.organizationId,
       });
 
-      // Start async processing (don't await - returns immediately)
       setImmediate(() => {
         try {
           const io = getIO();
@@ -143,7 +137,6 @@ router.post(
   }
 );
 
-// GET /api/videos/:id - get single video
 router.get('/:id', async (req, res) => {
   try {
     const video = await Video.findOne({ _id: req.params.id, isDeleted: false }).populate('uploadedBy', 'username email');
@@ -152,7 +145,6 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Video not found.' });
     }
 
-    // Access control: non-admin can only access their own videos
     if (req.user.role !== 'admin' && video.uploadedBy._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Access denied.' });
     }
@@ -164,7 +156,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// PATCH /api/videos/:id - update video metadata (editors and admins)
 router.patch(
   '/:id',
   requireRole('editor', 'admin'),
@@ -202,7 +193,6 @@ router.patch(
   }
 );
 
-// DELETE /api/videos/:id - soft delete (editors and admins)
 router.delete('/:id', requireRole('editor', 'admin'), async (req, res) => {
   try {
     const video = await Video.findOne({ _id: req.params.id, isDeleted: false });
@@ -225,7 +215,6 @@ router.delete('/:id', requireRole('editor', 'admin'), async (req, res) => {
   }
 });
 
-// GET /api/videos/:id/stream - stream video with range request support
 router.get('/:id/stream', async (req, res) => {
   try {
     const video = await Video.findOne({ _id: req.params.id, isDeleted: false });
@@ -234,7 +223,6 @@ router.get('/:id/stream', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Video not found.' });
     }
 
-    // Access control
     if (req.user.role !== 'admin' && video.uploadedBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Access denied.' });
     }
@@ -254,7 +242,6 @@ router.get('/:id/stream', async (req, res) => {
     const range = req.headers.range;
 
     if (range) {
-      // Parse range header
       const parts = range.replace(/bytes=/, '').split('-');
       const start = parseInt(parts[0], 10);
       const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
@@ -275,7 +262,6 @@ router.get('/:id/stream', async (req, res) => {
 
       fileStream.pipe(res);
     } else {
-      // Full file
       res.writeHead(200, {
         'Content-Length': fileSize,
         'Content-Type': video.mimetype,

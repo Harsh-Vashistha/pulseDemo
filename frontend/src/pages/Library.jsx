@@ -40,7 +40,6 @@ export default function Library() {
     fetchVideos();
   }, [fetchVideos]);
 
-  // Real-time updates
   useEffect(() => {
     const cleanup = onVideoUpdate((data) => {
       setVideos((prev) =>
@@ -77,7 +76,6 @@ export default function Library() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-white">Video Library</h1>
@@ -93,14 +91,12 @@ export default function Library() {
         )}
       </div>
 
-      {/* Upload */}
       {showUpload && (
         <div className="mb-6">
           <VideoUpload onUploadComplete={(v) => { setShowUpload(false); fetchVideos(); }} />
         </div>
       )}
 
-      {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-6">
         <input
           type="text"
@@ -149,7 +145,6 @@ export default function Library() {
         </select>
       </div>
 
-      {/* Grid */}
       {loading ? (
         <div className="flex items-center justify-center h-64">
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
@@ -167,7 +162,6 @@ export default function Library() {
         </div>
       )}
 
-      {/* Pagination */}
       {pagination.pages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
           <button

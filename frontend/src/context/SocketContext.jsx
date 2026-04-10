@@ -18,13 +18,8 @@ export function SocketProvider({ children }) {
       autoConnect: true,
     });
 
-    socketRef.current.on('connect', () => {
-      setConnected(true);
-    });
-
-    socketRef.current.on('disconnect', () => {
-      setConnected(false);
-    });
+    socketRef.current.on('connect', () => setConnected(true));
+    socketRef.current.on('disconnect', () => setConnected(false));
 
     return () => {
       socketRef.current?.disconnect();
@@ -50,7 +45,14 @@ export function SocketProvider({ children }) {
   };
 
   return (
-    <SocketContext.Provider value={{ socket: socketRef.current, connected, joinVideoRoom, leaveVideoRoom, onVideoProgress, onVideoUpdate }}>
+    <SocketContext.Provider value={{
+      socket: socketRef.current,
+      connected,
+      joinVideoRoom,
+      leaveVideoRoom,
+      onVideoProgress,
+      onVideoUpdate,
+    }}>
       {children}
     </SocketContext.Provider>
   );
